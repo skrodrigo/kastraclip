@@ -1,24 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
+import { DM_Sans, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { QueryClientProviderWrapper } from "../lib/query-client-provider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/contexts/auth-context";
+import { UpgradeDialogProvider } from "@/contexts/upgrade-dialog-context";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
   subsets: ["latin"],
-});
-
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
-  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -33,21 +30,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} antialiased`}
-      >
+      <body className={`${dmSans.variable} ${instrumentSerif.variable} antialiased`}>
         <QueryClientProviderWrapper>
-          <AuthProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange>
-              {children}
-            </ThemeProvider>
-          </AuthProvider>
+          <UpgradeDialogProvider>
+
+            <AuthProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="dark"
+                enableSystem
+                disableTransitionOnChange>
+                {children}
+              </ThemeProvider>
+            </AuthProvider>
+          </UpgradeDialogProvider>
+          <Toaster />
+
         </QueryClientProviderWrapper>
-        <Toaster />
       </body>
     </html >
   );
